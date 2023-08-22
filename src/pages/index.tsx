@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import temp from "../../public/temp.png";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { getRemoteUser } from "@/lib/getRemoteUser";
 const ultra = Ultra({
   subsets: ["latin"],
   weight: "400",
@@ -19,12 +20,10 @@ const indie = Indie_Flower({
   subsets: ["latin"],
   weight: "400",
 });
-/**
- * The list of messages displayed when the page is first loaded. You may remove or modify it as you wish.
- * @see src/types.ts
- */
 
-export default function HomePage() {
+export default function HomePage({
+  userRemoteDeets,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <section className="flex flex-col justify-center items-center">
       <HomeNav className="mt-10 mb-7">
@@ -32,7 +31,14 @@ export default function HomePage() {
           Trelent
         </span>
         <Button className="rounded-md p-4 text-white" asChild>
-          <Link href="/chat">Chat Now !</Link>
+          <Link
+            href={{
+              pathname: "/chat",
+              query: { "unique-ip": userRemoteDeets },
+            }}
+          >
+            Chat Now !
+          </Link>
         </Button>
       </HomeNav>
       <h1
@@ -61,25 +67,13 @@ export default function HomePage() {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  let ip;
-
   const { req } = context;
 
-  if (
-    req.headers["x-forwarded-for"] &&
-    typeof req.headers["x-forwarded-for"] === "string"
-  ) {
-    ip = req.headers["x-forwarded-for"].split(",")[0];
-  } else if (req.headers["x-real-ip"]) {
-    ip = req.socket.remoteAddress;
-  } else {
-    ip = req.socket.remoteAddress;
-  }
-
-  console.log(ip);
+  const userRemoteDeets = getRemoteUser(req);
+  console.log(userRemoteDeets);
   return {
     props: {
-      ip,
+      userRemoteDeets,
     },
   };
 }
