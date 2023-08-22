@@ -1,3 +1,4 @@
+import Chat from "@/components/chat/chat";
 import ChatNav from "@/components/navigation/chat-nav";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -23,13 +24,7 @@ export default function ChatPage() {
   return (
     <>
       <ChatNav triggerHandler={() => setOpen(!open)} />
-      <Image
-        src="/remote-work.svg"
-        width={400}
-        height={400}
-        alt="remote work GIF"
-      />
-      <p className="text-xl md:text-2xl text-center">No Messages Yet...</p>
+      <Chat />
     </>
   );
 }

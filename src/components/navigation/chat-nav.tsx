@@ -42,7 +42,7 @@ const ChatNav = ({ triggerHandler }: ChatNavProps) => {
         "bg-white text-black fixed top-[1vh] z-20 w-auto rounded-md p-2  shadow-xl xl:top-[5vh]"
       )}
     >
-      <div className="cursor flex space-x-6">
+      <div className="cursor flex space-x-2 md:space-x-6">
         {tabs.map((tab) =>
           tab.link ? (
             <Link key={tab.id} href={tab.link}>
@@ -61,6 +61,7 @@ const ChatNav = ({ triggerHandler }: ChatNavProps) => {
             </Link>
           ) : (
             <button
+              key={tab.id}
               onClick={triggerHandler}
               className={cn(
                 "rounded-md p-2",

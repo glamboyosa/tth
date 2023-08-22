@@ -35,6 +35,12 @@
     --ring: 224 71.4% 4.1%;
 
     --radius: 0.5rem;
+
+    --shadow-color: 0deg 0% 53%;
+    --shadow-elevation-high: 0.2px 0.4px 0.5px hsl(var(--shadow-color) / 0.41),
+      0.7px 1.4px 1.8px -0.8px hsl(var(--shadow-color) / 0.41),
+      1.8px 3.5px 4.4px -1.7px hsl(var(--shadow-color) / 0.41),
+      4.3px 8.5px 10.7px -2.5px hsl(var(--shadow-color) / 0.41);
   }
 
   .dark {
@@ -67,6 +73,12 @@
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
     --ring: 216 12.2% 83.9%;
+
+    --shadow-color: 0deg 0% 53%;
+    --shadow-elevation-high: 0.2px 0.4px 0.5px hsl(var(--shadow-color) / 0.41),
+      0.7px 1.4px 1.8px -0.8px hsl(var(--shadow-color) / 0.41),
+      1.8px 3.5px 4.4px -1.7px hsl(var(--shadow-color) / 0.41),
+      4.3px 8.5px 10.7px -2.5px hsl(var(--shadow-color) / 0.41);
   }
 }
 
