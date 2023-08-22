@@ -1,5 +1,5 @@
 import React from "react";
-import { MessageType } from "@/types";
+import { LightMessageType } from "@/types";
 import { Message } from "./message";
 
 export type MessageListProps = {
@@ -7,7 +7,7 @@ export type MessageListProps = {
    * The list of messages to display.
    * @see src/types.ts
    */
-  messages: MessageType[];
+  messages: LightMessageType[];
 };
 export const MessageList = ({ messages }: MessageListProps) => {
   return (

@@ -1,7 +1,3 @@
-import { MessageList } from "@/components/message-list";
-import { NewMessageForm } from "@/components/new-message-form";
-import { MessageType } from "@/types";
-import { useState } from "react";
 import { Ultra, Indie_Flower } from "next/font/google";
 
 import HomeNav from "@/components/navigation/home-nav";

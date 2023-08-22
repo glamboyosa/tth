@@ -1,6 +1,6 @@
 import { copyTextToClipboard } from "@/lib/copyToClipboard";
 import { nicerDate } from "@/lib/nicerDate";
-import { MessageType } from "@/types";
+import { LightMessageType } from "@/types";
 import {
   ClipboardDocumentIcon,
   ComputerDesktopIcon,
@@ -15,7 +15,7 @@ export type MessageProps = {
    * The message to display.
    * @see src/types.ts
    */
-  message: MessageType;
+  message: LightMessageType;
 };
 export const Message = ({ message }: MessageProps) => {
   const { toast } = useToast();
@@ -44,7 +44,9 @@ export const Message = ({ message }: MessageProps) => {
         <p className="whitespace-normal text-base mb-2 md:text-xl">
           {message.content}
         </p>
-        <p className="text-base mb-2 md:text-xl">{nicerDate(message.time)}</p>
+        <p className="text-base mb-2 md:text-xl">
+          {nicerDate(message.createdAt as Date)}
+        </p>
       </div>
       <ClipboardDocumentIcon onClick={() => copyHandler(message.content)} />
     </div>
