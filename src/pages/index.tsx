@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import temp from "../../public/temp.png";
+import { GetServerSidePropsContext } from "next";
 const ultra = Ultra({
   subsets: ["latin"],
   weight: "400",
@@ -57,4 +58,28 @@ export default function HomePage() {
       />
     </section>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  let ip;
+
+  const { req } = context;
+
+  if (
+    req.headers["x-forwarded-for"] &&
+    typeof req.headers["x-forwarded-for"] === "string"
+  ) {
+    ip = req.headers["x-forwarded-for"].split(",")[0];
+  } else if (req.headers["x-real-ip"]) {
+    ip = req.socket.remoteAddress;
+  } else {
+    ip = req.socket.remoteAddress;
+  }
+
+  console.log(ip);
+  return {
+    props: {
+      ip,
+    },
+  };
 }
