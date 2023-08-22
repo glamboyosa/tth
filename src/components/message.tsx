@@ -1,5 +1,14 @@
+import { copyTextToClipboard } from "@/lib/copyToClipboard";
+import { nicerDate } from "@/lib/nicerDate";
 import { MessageType } from "@/types";
-import { SparklesIcon, UserIcon } from "@heroicons/react/24/outline";
+import {
+  ClipboardDocumentIcon,
+  ComputerDesktopIcon,
+  SparklesIcon,
+  UserCircleIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
+import { useToast } from "./ui/use-toast";
 
 export type MessageProps = {
   /**
@@ -8,27 +17,36 @@ export type MessageProps = {
    */
   message: MessageType;
 };
-export const Message = (props: MessageProps) => {
-  const { message } = props;
-
+export const Message = ({ message }: MessageProps) => {
+  const { toast } = useToast();
+  const copyHandler = async (text: string) => {
+    try {
+      await copyTextToClipboard(text);
+      toast({
+        title: "Success ✅",
+        description: "Successfully copied to clipboard",
+      });
+    } catch (error) {
+      toast({
+        title: "❌",
+        description: "Something went wrong copying to clipboard",
+      });
+    }
+  };
   return (
-    <div className="flex flex-row gap-4 p-2 first:rounded-t-md last:rounded-b-md text-black dark:text-white bg-white dark:bg-slate-800">
-      <div className="shrink">
-        {message.role === "user" ? (
-          <>
-            <span className="sr-only">Message from you</span>
-            <p className="text-gray-500 dark:text-gray-300">You</p>
-          </>
-        ) : (
-          <>
-            <span className="sr-only">Message from bot</span>
-            <p className="text-gray-500 dark:text-gray-300">Bot</p>
-          </>
-        )}
+    <div className="flex  gap-2 p-2 text-black divide-y-2 divide-solid divide-gray-300 last-of-type:divide-y-0 last-of-type:divide-none">
+      {message.role === "user" ? (
+        <UserIcon width={45} />
+      ) : (
+        <ComputerDesktopIcon width={45} />
+      )}
+      <div className="w-[90%]">
+        <p className="whitespace-normal text-base mb-2 md:text-xl">
+          {message.content}
+        </p>
+        <p className="text-base mb-2 md:text-xl">{nicerDate(message.time)}</p>
       </div>
-
-      {/* Maybe a non-plaintext format would be a bit nicer to read? */}
-      <p className="grow">{message.content}</p>
+      <ClipboardDocumentIcon onClick={() => copyHandler(message.content)} />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import Chat from "@/components/chat/chat";
 import ChatNav from "@/components/navigation/chat-nav";
+import { Toaster } from "@/components/ui/toaster";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ export default function ChatPage() {
     <>
       <ChatNav triggerHandler={() => setOpen(!open)} />
       <Chat />
+      <Toaster />
     </>
   );
 }

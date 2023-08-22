@@ -9,11 +9,9 @@ export type MessageListProps = {
    */
   messages: MessageType[];
 };
-export const MessageList = (props: MessageListProps) => {
-  const { messages } = props;
-
+export const MessageList = ({ messages }: MessageListProps) => {
   return (
-    <div className="overflow-auto mt-10">
+    <div className="overflow-auto w-full  md:w-[45%]">
       {messages.map((message, index) => (
         <Message message={message} key={index} />
       ))}
