@@ -5,6 +5,7 @@ import { useChat } from "ai/react";
 import { Message } from "ai";
 import { MessageList } from "../message-list";
 import Spacer from "../ui/spacer";
+import { useEffect, useId, useState } from "react";
 
 type ChatProps = {
   /**
@@ -37,6 +38,7 @@ const Chat: React.FC<ChatProps> = ({
   unique_ip,
   mutationHandler,
 }) => {
+  const [includesId, setIncludesId] = useState(false);
   const { messages, handleSubmit, input, handleInputChange } = useChat({
     api: "/api/chat",
     body: {
@@ -44,17 +46,22 @@ const Chat: React.FC<ChatProps> = ({
     },
 
     initialMessages:
-      initialMessages && initialMessages.length > 0
-        ? initialMessages
-        : undefined,
+      initialMessages && initialMessages.length > 0 ? initialMessages : [],
     async onFinish() {
       await mutationHandler();
     },
   });
   console.log("openAI", messages);
+  useEffect(() => {
+    if (window.location.search.includes("&")) {
+      setIncludesId(true);
+    } else {
+      setIncludesId(false);
+    }
+  }, []);
   return (
     <div className="mt-32 overflow-scroll scroll-smooth">
-      {messages.length > 0 ? (
+      {includesId && messages.length > 0 ? (
         <MessageList messages={messages as unknown as LightMessageType[]} />
       ) : (
         NMY

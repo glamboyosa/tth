@@ -18,7 +18,7 @@ export default function ChatPage({
   const { query } = useRouter();
   const [open, setOpen] = useState(false);
   const [usersMsgsList, setUsersMsgsList] = useState(usersMessagesList);
-
+  const [msgs] = useState(messages)
   const uniqueIp = query["unique_ip"];
   const id = query.id;
   const { toast } = useToast();
@@ -88,7 +88,7 @@ export default function ChatPage({
         triggerHandler={() => setOpen(!open)}
       />
       <Chat
-        messages={messages as unknown as Message[]}
+        messages={msgs as unknown as Message[]}
         unique_ip={uniqueIp as string}
         mutationHandler={mutationHandler}
       />
