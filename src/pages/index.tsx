@@ -8,14 +8,7 @@ import Image from "next/image";
 import temp from "../../public/temp.png";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getRemoteUser } from "@/lib/getRemoteUser";
-const ultra = Ultra({
-  subsets: ["latin"],
-  weight: "400",
-});
-const indie = Indie_Flower({
-  subsets: ["latin"],
-  weight: "400",
-});
+import { indie, ultra } from "@/lib/font";
 
 export default function HomePage({
   userRemoteDeets,
@@ -30,7 +23,7 @@ export default function HomePage({
           <Link
             href={{
               pathname: "/chat",
-              query: { "unique_ip": userRemoteDeets },
+              query: { unique_ip: userRemoteDeets },
             }}
           >
             Chat Now !

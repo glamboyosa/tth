@@ -1,8 +1,4 @@
-import {
-  PaperAirplaneIcon,
-  PlusCircleIcon,
-  PlusIcon,
-} from "@heroicons/react/24/outline";
+import { PaperAirplaneIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import {

@@ -2,18 +2,13 @@ import Chat from "@/components/chat/chat";
 import ChatNav from "@/components/navigation/chat-nav";
 import { Toaster } from "@/components/ui/toaster";
 import { convertFromJSON } from "@/lib/convertFromJson";
-import { LightMessageType, MessageTypeFromKV, StrippedPayload } from "@/types";
-import { createClient, kv } from "@vercel/kv";
+import { MessageTypeFromKV, StrippedPayload } from "@/types";
+import { kv } from "@vercel/kv";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Message } from "ai";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useMutation,
-  useQuery,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import CommandChat from "@/components/chat/command-chat";
 export default function ChatPage({
   messages,

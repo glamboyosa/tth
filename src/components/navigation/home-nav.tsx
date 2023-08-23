@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { CSSProperties, PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 
 type HomeNavProps = {
   /**

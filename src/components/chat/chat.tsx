@@ -1,6 +1,6 @@
 import Image from "next/image";
 import ChatInput from "./chat-input";
-import { LightMessageType, MessageTypeFromKV } from "@/types";
+import { LightMessageType } from "@/types";
 import { useChat } from "ai/react";
 import { Message } from "ai";
 import { MessageList } from "../message-list";
@@ -37,12 +37,18 @@ const Chat: React.FC<ChatProps> = ({
     },
 
     initialMessages:
-      initialMessages && initialMessages.length > 0 ? initialMessages : undefined,
+      initialMessages && initialMessages.length > 0
+        ? initialMessages
+        : undefined,
   });
   console.log("openAI", messages);
   return (
     <div className="mt-28">
-      {messages.length > 0 ? <MessageList messages={messages as  unknown as LightMessageType[]} /> : NMY}
+      {messages.length > 0 ? (
+        <MessageList messages={messages as unknown as LightMessageType[]} />
+      ) : (
+        NMY
+      )}
       <ChatInput
         onChangeHandler={handleInputChange}
         value={input}

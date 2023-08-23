@@ -1,4 +1,4 @@
-import { LightMessageType, StrippedPayload } from "@/types";
+import { StrippedPayload } from "@/types";
 import { kv } from "@vercel/kv";
 import { NextApiRequest, NextApiResponse } from "next";
 import { OpenAIStream, streamToResponse, Message } from "ai";

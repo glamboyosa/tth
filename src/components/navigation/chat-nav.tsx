@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { channel } from "diagnostics_channel";
 import Link from "next/link";
 import { useState } from "react";
 const commandLabel = (

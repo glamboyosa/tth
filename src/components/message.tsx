@@ -4,8 +4,6 @@ import { LightMessageType } from "@/types";
 import {
   ClipboardDocumentIcon,
   ComputerDesktopIcon,
-  SparklesIcon,
-  UserCircleIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { useToast } from "./ui/use-toast";
