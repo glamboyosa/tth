@@ -30,7 +30,7 @@ export default function HomePage({
           <Link
             href={{
               pathname: "/chat",
-              query: { "unique-ip": userRemoteDeets },
+              query: { "unique_ip": userRemoteDeets },
             }}
           >
             Chat Now !

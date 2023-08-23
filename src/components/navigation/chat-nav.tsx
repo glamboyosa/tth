@@ -30,9 +30,13 @@ type ChatNavProps = {
    * the function that triggers opening the `<Command/>`
    */
   triggerHandler: VoidFunction;
+  /**
+   * the users unique ip
+   */
+  uniqueIp: string;
 };
 
-const ChatNav = ({ triggerHandler }: ChatNavProps) => {
+const ChatNav = ({ triggerHandler, uniqueIp }: ChatNavProps) => {
   const [activeTabId] = useState("chat" as const);
   // const [tabId, setTabId] = useState<(typeof tabs)[0]["id"]>("chat");
 
@@ -45,7 +49,14 @@ const ChatNav = ({ triggerHandler }: ChatNavProps) => {
       <div className="cursor flex space-x-2 md:space-x-6">
         {tabs.map((tab) =>
           tab.link ? (
-            <Link key={tab.id} href={tab.link}>
+            <Link
+              key={tab.id}
+              href={
+                tab.link === "/chat"
+                  ? `${tab.link}?unique_ip=${uniqueIp}`
+                  : tab.link
+              }
+            >
               <button
                 className={cn(
                   `relative  rounded-full px-3 py-1.5 text-sm font-medium  outline-sky-400 transition focus-visible:outline-2`,

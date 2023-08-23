@@ -7,12 +7,14 @@ import { createClient, kv } from "@vercel/kv";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
+import { Message } from "ai";
 import {
   QueryClient,
   QueryClientProvider,
+  useMutation,
   useQuery,
 } from "@tanstack/react-query";
+import CommandChat from "@/components/chat/command-chat";
 export default function ChatPage({
   messages,
   path,
@@ -22,31 +24,38 @@ export default function ChatPage({
   const [open, setOpen] = useState(false);
   const [usersMsgsList, setUsersMsgsList] = useState(usersMessagesList);
   const router = useRouter();
-  const uniqueIp = query["unique-ip"];
+  const uniqueIp = query["unique_ip"];
 
-  const { data } = useQuery({
-    queryKey: ["userMessages"],
-    queryFn: () =>
-      fetch(
-        `${process.env.NEXT_PUBLIC_KV_REST_API_URL}/lrange/chat:${uniqueIp}/0/-1`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_KV_REST_API_TOKEN}`,
-          },
+  const fetchList = useMutation<{ result: string[] }>(
+    () =>
+      fetch(`${process.env.NEXT_PUBLIC_KV_REST_API_URL}`, {
+        method: "post",
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_KV_REST_API_TOKEN}`,
+        },
+        body: `["LRANGE", "chats:${uniqueIp}", "0", "-1"]`,
+      }).then((resp) => resp.json()),
+    {
+      onSuccess(data) {
+        if (data.result.length === 0) {
+          console.log("YEESIRR");
+          return [];
+        } else {
+          console.log(data.result);
+          setUsersMsgsList(convertFromJSON(data.result));
         }
-      ).then((resp) => resp.json()),
-    initialData:
-      usersMessagesList && usersMessagesList?.length > 0
-        ? usersMessagesList
-        : [],
-    onSuccess(data) {
-      if (data.result.length === 0) {
-        console.log("YEESIRR");
-        return [];
-      }
-    },
-  });
-  console.log(data);
+      },
+    }
+  );
+  console.log(usersMsgsList, "users msg list");
+  const mutationHandler = async () => {
+    await fetchList.mutateAsync();
+  };
+  // useEffect(() => {
+  //   setInterval(async () => {
+  //     await mutationHandler();
+  //   }, 5000);
+  // }, []);
   console.log(uniqueIp);
   // key handler for when ctrl f is pressed (open <Command/>)
   useEffect(() => {
@@ -62,16 +71,27 @@ export default function ChatPage({
   }, []);
   // basically every re-render if there is a path ,
   // shallow update the route
-  useEffect(() => {
-    if (path && path.length > 0) {
-      router.push({ pathname: path }, undefined, { shallow: true });
-    }
-  });
+  // useEffect(() => {
+  //   if (path && path.length > 0) {
+  //     router.push({ pathname: path }, undefined, { shallow: true });
+  //   }
+  // });
 
   return (
     <>
-      <ChatNav triggerHandler={() => setOpen(!open)} />
-      <Chat messages={messages} unique_ip={uniqueIp as string} />
+      <ChatNav
+        uniqueIp={uniqueIp as string}
+        triggerHandler={() => setOpen(!open)}
+      />
+      <Chat
+        messages={messages as unknown as Message[]}
+        unique_ip={uniqueIp as string}
+      />
+      <CommandChat
+        usersMessages={usersMsgsList}
+        open={open}
+        openHandler={() => setOpen(!open)}
+      />
       <Toaster />
     </>
   );
@@ -84,16 +104,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   console.log(query);
   if (query.id) {
-    usersMessages = await kv.hget(
-      `user:${query["unique-ip"]}chat:${query.id}`,
-      "messages"
-    );
-    path = await kv.hget(`user:${query["unique-ip"]}chat:${query.id}`, "path");
+    usersMessages = await kv.hget(`userchat${query.id}`, "messages");
+    path = await kv.hget(`userchat${query.id}`, "path");
   }
 
-  const msgsList: string[] = await kv.lrange(`chats:${query.unique_ip}`, 0, -1);
+  console.log(usersMessages, "from user serverr");
+
+  const msgsList: Array<StrippedPayload> = await kv.lrange(
+    `chats:${query.unique_ip}`,
+    0,
+    -1
+  );
+  console.log("FROM SERVER", msgsList);
   const usersMessagesList =
-    msgsList !== null && msgsList.length > 0 ? convertFromJSON(msgsList) : null;
+    msgsList !== null && msgsList.length > 0 ? msgsList : null;
   return {
     props: {
       messages: usersMessages,

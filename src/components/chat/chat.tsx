@@ -1,6 +1,6 @@
 import Image from "next/image";
 import ChatInput from "./chat-input";
-import { MessageTypeFromKV } from "@/types";
+import { LightMessageType, MessageTypeFromKV } from "@/types";
 import { useChat } from "ai/react";
 import { Message } from "ai";
 import { MessageList } from "../message-list";
@@ -9,7 +9,7 @@ type ChatProps = {
   /**
    * messages stored in Redis, gotten from fetching the KV store.
    */
-  messages: MessageTypeFromKV;
+  messages: Message[];
   /**
    * user's unique IP
    */
@@ -36,14 +36,13 @@ const Chat: React.FC<ChatProps> = ({
       unique_ip,
     },
 
-    initialMessages: (initialMessages && initialMessages.length > 0
-      ? initialMessages
-      : []) as Message[],
+    initialMessages:
+      initialMessages && initialMessages.length > 0 ? initialMessages : undefined,
   });
   console.log("openAI", messages);
   return (
     <div className="mt-28">
-      {messages.length > 0 ? <MessageList messages={messages} /> : NMY}
+      {messages.length > 0 ? <MessageList messages={messages as  unknown as LightMessageType[]} /> : NMY}
       <ChatInput
         onChangeHandler={handleInputChange}
         value={input}

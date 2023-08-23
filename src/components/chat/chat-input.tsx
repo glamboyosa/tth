@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ChangeEvent, FormEvent } from "react";
 import { ChatRequestOptions } from "ai";
+import { useRouter } from "next/router";
 
 type ChatInputProps = {
   /**
@@ -39,6 +40,8 @@ const ChatInput = ({
   value,
   submitHandler,
 }: ChatInputProps) => {
+  const router = useRouter();
+  const basePath = router.asPath.split("&")[0];
   return (
     <form
       onSubmit={submitHandler}
@@ -48,7 +51,10 @@ const ChatInput = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <PlusCircleIcon width={30} />
+              <PlusCircleIcon
+                onClick={() => router.push(basePath)}
+                width={30}
+              />
             </TooltipTrigger>
             <TooltipContent className="bg-white shadow-sm text-inherit">
               <p>Start a new chat</p>

@@ -42,13 +42,17 @@ export default async function handler(
     });
     const stream = OpenAIStream(res, {
       async onCompletion(completion) {
+        const messagesWithTimestamp = messages.map((message) => ({
+          ...message,
+          createdAt: new Date(),
+        }));
         const payload = {
           id,
           unique_ip,
           path,
           title,
           messages: [
-            ...messages,
+            ...messagesWithTimestamp,
             {
               content: completion,
               role: "assistant",
@@ -63,7 +67,7 @@ export default async function handler(
           title: payload.title,
         };
         // save a chat payload into Redis
-        const r = await kv.hset(`user:${unique_ip}chat:${id}`, payload);
+        const r = await kv.hset(`userchat${id}`, payload);
         console.log("HSET RESP", r);
         const msgs = JSON.stringify(strippedPayload);
         // save the messages itself

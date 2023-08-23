@@ -43,7 +43,7 @@ export const Message = ({ message }: MessageProps) => {
       <div className="w-[500px]">
         <p className=" w-full text-base mb-2">{message.content}</p>
         <p className="mb-2 text-xs text-gray-700 md:text-sm whitespace-nowrap">
-          {nicerDate(message.createdAt as Date)}
+          {nicerDate(message.createdAt ? message.createdAt : Date())}
         </p>
       </div>
       <ClipboardDocumentIcon
