@@ -65,6 +65,10 @@ export default function ChatPage({
     };
 
     document.addEventListener("keydown", down);
+
+    // also if the page mpunts for the first time e.g. after clicking
+    // some history , dismiss
+    setOpen(false);
     return () => document.removeEventListener("keydown", down);
   }, []);
 
