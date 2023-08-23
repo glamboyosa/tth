@@ -10,9 +10,9 @@ export type MessageListProps = {
   messages: LightMessageType[];
 };
 export const MessageList = ({ messages }: MessageListProps) => {
-  console.log(messages)
+  console.log(messages);
   return (
-    <div className="overflow-auto flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center">
       {messages.map((message, index) => (
         <Message message={message} key={index} />
       ))}

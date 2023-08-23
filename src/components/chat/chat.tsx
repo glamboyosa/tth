@@ -1,9 +1,10 @@
 import Image from "next/image";
 import ChatInput from "./chat-input";
-import { LightMessageType } from "@/types";
+import { LightMessageType, StrippedPayload } from "@/types";
 import { useChat } from "ai/react";
 import { Message } from "ai";
 import { MessageList } from "../message-list";
+import Spacer from "../ui/spacer";
 
 type ChatProps = {
   /**
@@ -15,6 +16,7 @@ type ChatProps = {
    */
   unique_ip: string;
 };
+
 const NMY = (
   <>
     <Image
@@ -43,12 +45,14 @@ const Chat: React.FC<ChatProps> = ({
   });
   console.log("openAI", messages);
   return (
-    <div className="mt-28">
+    <div className="mt-32 overflow-scroll scroll-smooth">
       {messages.length > 0 ? (
         <MessageList messages={messages as unknown as LightMessageType[]} />
       ) : (
         NMY
       )}
+
+      <Spacer />
       <ChatInput
         onChangeHandler={handleInputChange}
         value={input}

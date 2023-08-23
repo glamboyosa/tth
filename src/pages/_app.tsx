@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
         className={cn(
           "flex flex-col min-h-screen items-center text-black/80",
           PF.className,
-          router.pathname === "/" && "bg-homeBg"
+          router.pathname === "/" ? "bg-homeBg" : "bg-white/90"
         )}
       >
         <Component {...pageProps} />

@@ -10,17 +10,17 @@ import { useEffect, useState } from "react";
 import { Message } from "ai";
 import { useMutation } from "@tanstack/react-query";
 import CommandChat from "@/components/chat/command-chat";
+import { useToast } from "@/components/ui/use-toast";
 export default function ChatPage({
   messages,
-  path,
   usersMessagesList,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { query } = useRouter();
   const [open, setOpen] = useState(false);
   const [usersMsgsList, setUsersMsgsList] = useState(usersMessagesList);
-  const router = useRouter();
-  const uniqueIp = query["unique_ip"];
 
+  const uniqueIp = query["unique_ip"];
+  const { toast } = useToast();
   const fetchList = useMutation<{ result: string[] }>(
     () =>
       fetch(`${process.env.NEXT_PUBLIC_KV_REST_API_URL}`, {
@@ -32,8 +32,15 @@ export default function ChatPage({
       }).then((resp) => resp.json()),
     {
       onSuccess(data) {
+        if (Object.keys(data).some((el) => el === "error")) {
+          // Vercel KV returns an error successfully so we need to deal with it
+          toast({
+            title: "❌",
+            description: "Something went wrong with KV",
+          });
+          return;
+        }
         if (data.result.length === 0) {
-          console.log("YEESIRR");
           return [];
         } else {
           console.log(data.result);
@@ -46,11 +53,7 @@ export default function ChatPage({
   const mutationHandler = async () => {
     await fetchList.mutateAsync();
   };
-  // useEffect(() => {
-  //   setInterval(async () => {
-  //     await mutationHandler();
-  //   }, 5000);
-  // }, []);
+
   console.log(uniqueIp);
   // key handler for when ctrl f is pressed (open <Command/>)
   useEffect(() => {
@@ -64,13 +67,6 @@ export default function ChatPage({
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
-  // basically every re-render if there is a path ,
-  // shallow update the route
-  // useEffect(() => {
-  //   if (path && path.length > 0) {
-  //     router.push({ pathname: path }, undefined, { shallow: true });
-  //   }
-  // });
 
   return (
     <>
@@ -86,9 +82,8 @@ export default function ChatPage({
         usersMessages={usersMsgsList}
         open={open}
         openHandler={async () => {
-          if (open === false) {
-            await mutationHandler();
-          }
+          console.log("YM");
+          await mutationHandler();
           setOpen(!open);
         }}
       />

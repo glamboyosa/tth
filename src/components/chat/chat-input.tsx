@@ -41,7 +41,7 @@ const ChatInput = ({
   return (
     <form
       onSubmit={submitHandler}
-      className="fixed cursor-pointer top-[82vh] left-0 z-30 w-full  md:w-[45%] p-8 bg-white shadow-fuller-shadow md:left-[30%] "
+      className="fixed rounded-md cursor-pointer top-[88%]  md:top-[84vh] left-0 z-30 w-full  md:w-[45%] p-8 bg-white shadow-fuller-shadow md:left-[30%] "
     >
       <div className="flex gap-3 items-center">
         <TooltipProvider>
@@ -68,6 +68,7 @@ const ChatInput = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                disabled={value.length === 0}
                 type="submit"
                 className="shadow-md outline-none cursor-pointer text-black text-sm whitespace-nowrap border-none hover:bg-transparent bg-transparent flex items-center gap-2"
               >

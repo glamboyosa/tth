@@ -34,9 +34,9 @@ export const Message = ({ message }: MessageProps) => {
   return (
     <div className="flex items-start w-1/2  gap-2 p-2 text-black divide-y-2 divide-y-reverse divide-solid divide-gray-300 last-of-type:divide-y-0 last-of-type:divide-none md:w-full">
       {message.role === "user" ? (
-        <UserIcon width={22} />
+        <UserIcon  className="w-12 md:w-6" />
       ) : (
-        <ComputerDesktopIcon width={22} />
+        <ComputerDesktopIcon className="w-12 md:w-6" />
       )}
       <div className="w-[500px]">
         <p className=" w-full text-base mb-2">{message.content}</p>
@@ -45,8 +45,8 @@ export const Message = ({ message }: MessageProps) => {
         </p>
       </div>
       <ClipboardDocumentIcon
-        className="ml-auto cursor-pointer divide-none!"
-        width={25}
+        className="ml-auto cursor-pointer divide-none! w-12 md:w-7"
+      
         onClick={() => copyHandler(message.content)}
       />
     </div>
