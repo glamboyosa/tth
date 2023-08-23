@@ -34,21 +34,23 @@ export const Message = ({ message }: MessageProps) => {
     }
   };
   return (
-    <div className="flex  gap-2 p-2 text-black divide-y-2 divide-solid divide-gray-300 last-of-type:divide-y-0 last-of-type:divide-none">
+    <div className="flex items-center  gap-2 p-2 text-black divide-y-2 divide-y-reverse divide-solid divide-gray-300 last-of-type:divide-y-0 last-of-type:divide-none">
       {message.role === "user" ? (
-        <UserIcon width={45} />
+        <UserIcon width={22} />
       ) : (
-        <ComputerDesktopIcon width={45} />
+        <ComputerDesktopIcon width={22} />
       )}
-      <div className="w-[90%]">
-        <p className="whitespace-normal text-base mb-2 md:text-xl">
-          {message.content}
-        </p>
-        <p className="text-base mb-2 md:text-xl">
+      <div>
+        <p className=" w-full text-base mb-2">{message.content}</p>
+        <p className="mb-2 text-xs text-gray-700 md:text-sm whitespace-nowrap">
           {nicerDate(message.createdAt as Date)}
         </p>
       </div>
-      <ClipboardDocumentIcon onClick={() => copyHandler(message.content)} />
+      <ClipboardDocumentIcon
+        className="ml-auto cursor-pointer divide-none!"
+        width={25}
+        onClick={() => copyHandler(message.content)}
+      />
     </div>
   );
 };

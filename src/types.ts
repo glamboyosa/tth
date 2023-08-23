@@ -4,3 +4,20 @@ import { Message } from "ai";
  * Feel free to modify this as you wish, or use a different type (even from another library) altogether.
  */
 export type LightMessageType = Pick<Message, "role" | "content" | "createdAt">;
+
+export type MessageTypeFromKV = Array<LightMessageType> | null;
+ type Payload = {
+  id: string;
+  unique_ip: string;
+  path: string;
+  title: string;
+  messages: Array<
+    | Message
+    | {
+        content: string;
+        role: string;
+        createdAt: Date;
+      }
+  >;
+};
+export type StrippedPayload = Omit<Payload, "messages">;

@@ -11,7 +11,7 @@ export type MessageListProps = {
 };
 export const MessageList = ({ messages }: MessageListProps) => {
   return (
-    <div className="overflow-auto w-full  md:w-[45%]">
+    <div className="overflow-auto w-full ">
       {messages.map((message, index) => (
         <Message message={message} key={index} />
       ))}

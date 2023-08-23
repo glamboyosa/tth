@@ -11,21 +11,39 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ChangeEvent, FormEvent } from "react";
+import { ChatRequestOptions } from "ai";
 
 type ChatInputProps = {
   /**
    * `onChangeHandler` bound from Vercel AI's form control
    */
-  onChangeHandler: VoidFunction;
+  onChangeHandler: (
+    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
+  ) => void;
+  /**
+   * `submitHandler` bound from Vercel AI's form control
+   */
+  submitHandler: (
+    e: FormEvent<HTMLFormElement>,
+    chatRequestOptions?: ChatRequestOptions | undefined
+  ) => void;
   /**
    * `value` bound from Vercel AI's form control
    */
   value: string;
 };
 
-const ChatInput = ({ onChangeHandler, value }: ChatInputProps) => {
+const ChatInput = ({
+  onChangeHandler,
+  value,
+  submitHandler,
+}: ChatInputProps) => {
   return (
-    <div className="fixed cursor-pointer top-[82vh] z-30 w-full  md:w-[45%] p-8 bg-white/80 shadow-fuller-shadow">
+    <form
+      onSubmit={submitHandler}
+      className="fixed cursor-pointer top-[82vh] left-0 z-30 w-full  md:w-[45%] p-8 bg-white/80 shadow-fuller-shadow md:left-[30%] "
+    >
       <div className="flex gap-3 items-center">
         <TooltipProvider>
           <Tooltip>
@@ -50,9 +68,8 @@ const ChatInput = ({ onChangeHandler, value }: ChatInputProps) => {
               <Button
                 type="submit"
                 className="shadow-md outline-none cursor-pointer text-black text-sm whitespace-nowrap border-none hover:bg-transparent bg-transparent flex items-center gap-2"
-                asChild
               >
-                <PaperAirplaneIcon />
+                <PaperAirplaneIcon className="text-black" width={20} />
               </Button>
             </TooltipTrigger>
             <TooltipContent className="mr-2 bg-white text-inherit shadow-sm">
@@ -61,7 +78,7 @@ const ChatInput = ({ onChangeHandler, value }: ChatInputProps) => {
           </Tooltip>
         </TooltipProvider>
       </div>
-    </div>
+    </form>
   );
 };
 

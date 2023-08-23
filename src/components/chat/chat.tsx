@@ -1,7 +1,20 @@
 import Image from "next/image";
 import ChatInput from "./chat-input";
+import { MessageTypeFromKV } from "@/types";
+import { useChat } from "ai/react";
+import { Message } from "ai";
+import { MessageList } from "../message-list";
 
-type ChatProps = {};
+type ChatProps = {
+  /**
+   * messages stored in Redis, gotten from fetching the KV store.
+   */
+  messages: MessageTypeFromKV;
+  /**
+   * user's unique IP
+   */
+  unique_ip: string;
+};
 const NMY = (
   <>
     <Image
@@ -13,12 +26,30 @@ const NMY = (
     <p className="text-xl md:text-2xl text-center">No Messages Yet...</p>
   </>
 );
-const Chat: React.FC<ChatProps> = () => {
+const Chat: React.FC<ChatProps> = ({
+  messages: initialMessages,
+  unique_ip,
+}) => {
+  const { messages, handleSubmit, input, handleInputChange } = useChat({
+    api: "/api/chat",
+    body: {
+      unique_ip,
+    },
+
+    initialMessages: (initialMessages && initialMessages.length > 0
+      ? initialMessages
+      : []) as Message[],
+  });
+  console.log("openAI", messages);
   return (
-    <form className="mt-28">
-      {NMY}
-      <ChatInput onChangeHandler={() => {}} value="" />
-    </form>
+    <div className="mt-28">
+      {messages.length > 0 ? <MessageList messages={messages} /> : NMY}
+      <ChatInput
+        onChangeHandler={handleInputChange}
+        value={input}
+        submitHandler={handleSubmit}
+      />
+    </div>
   );
 };
 
