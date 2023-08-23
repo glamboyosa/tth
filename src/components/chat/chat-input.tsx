@@ -45,7 +45,7 @@ const ChatInput = ({
   return (
     <form
       onSubmit={submitHandler}
-      className="fixed cursor-pointer top-[82vh] left-0 z-30 w-full  md:w-[45%] p-8 bg-white/80 shadow-fuller-shadow md:left-[30%] "
+      className="fixed cursor-pointer top-[82vh] left-0 z-30 w-full  md:w-[45%] p-8 bg-white shadow-fuller-shadow md:left-[30%] "
     >
       <div className="flex gap-3 items-center">
         <TooltipProvider>
