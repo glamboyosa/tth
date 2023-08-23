@@ -34,13 +34,13 @@ export const Message = ({ message }: MessageProps) => {
     }
   };
   return (
-    <div className="flex items-center  gap-2 p-2 text-black divide-y-2 divide-y-reverse divide-solid divide-gray-300 last-of-type:divide-y-0 last-of-type:divide-none">
+    <div className="flex items-start w-1/2  gap-2 p-2 text-black divide-y-2 divide-y-reverse divide-solid divide-gray-300 last-of-type:divide-y-0 last-of-type:divide-none md:w-full">
       {message.role === "user" ? (
         <UserIcon width={22} />
       ) : (
         <ComputerDesktopIcon width={22} />
       )}
-      <div>
+      <div className="w-[500px]">
         <p className=" w-full text-base mb-2">{message.content}</p>
         <p className="mb-2 text-xs text-gray-700 md:text-sm whitespace-nowrap">
           {nicerDate(message.createdAt as Date)}

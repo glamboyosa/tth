@@ -1,9 +1,8 @@
 import { LightMessageType, StrippedPayload } from "@/types";
 import { kv } from "@vercel/kv";
 import { NextApiRequest, NextApiResponse } from "next";
-import { OpenAIStream, StreamingTextResponse, Message } from "ai";
+import { OpenAIStream, streamToResponse, Message } from "ai";
 import OpenAI from "openai";
-import { json } from "express";
 
 // run on the edge
 
@@ -20,61 +19,59 @@ export default async function handler(
   if (request.method === "POST") {
     console.log("HIT HERE");
     let rawData = "";
+    const body = request.body;
+    console.log("THE BODY IS", body);
+    console.log("PARSED BODY?", JSON.parse(body));
 
     // Listen to the 'data' event to accumulate the incoming data
-    request.on("data", (chunk) => {
-      rawData += chunk;
+    const {
+      messages,
+      unique_ip,
+    }: { messages: Array<Message>; unique_ip: string } = JSON.parse(body);
+    const id = crypto.randomUUID();
+    console.log(request.body.unique_ip);
+    console.log(messages, "messages from client");
+    const title = messages[0].content.substring(0, 50);
+    const path = `/chat?unique_ip=${unique_ip}&id=${id}`;
+    console.log("THE PATH IS", path);
+    const res = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages,
+      temperature: 0.7,
+      stream: true,
     });
-
-    request.on("end", async () => {
-      const requestData = JSON.parse(rawData);
-      console.log(requestData);
-      const {
-        messages,
-        unique_ip,
-      }: { messages: Array<Message>; unique_ip: string } = requestData;
-      const id = crypto.randomUUID();
-      console.log(request.body.unique_ip);
-      console.log(messages, "messages from client");
-      const title = messages[0].content.substring(0, 50);
-      const path = `/chat?unique_ip=${unique_ip}&id=${id}`;
-      const res = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages,
-        temperature: 0.7,
-        stream: true,
-      });
-      const stream = OpenAIStream(res, {
-        async onCompletion(completion) {
-          const payload = {
-            id,
-            unique_ip,
-            path,
-            title,
-            messages: [
-              ...messages,
-              {
-                content: completion,
-                role: "assistant",
-                createdAt: new Date(),
-              },
-            ],
-          };
-          const strippedPayload: StrippedPayload = {
-            id: payload.id,
-            unique_ip: payload.unique_ip,
-            path: payload.path,
-            title: payload.title,
-          };
-          // save a chat payload into Redis
-          await kv.hset(`user:${unique_ip}chat:${id}`, payload);
-          const msgs = JSON.stringify(strippedPayload);
-          // save the messages itself
-          await kv.lpush(`chats:${unique_ip}`, msgs);
-        },
-      });
-      return new StreamingTextResponse(stream);
+    const stream = OpenAIStream(res, {
+      async onCompletion(completion) {
+        const payload = {
+          id,
+          unique_ip,
+          path,
+          title,
+          messages: [
+            ...messages,
+            {
+              content: completion,
+              role: "assistant",
+              createdAt: new Date(),
+            },
+          ],
+        };
+        const strippedPayload: StrippedPayload = {
+          id: payload.id,
+          unique_ip: payload.unique_ip,
+          path: payload.path,
+          title: payload.title,
+        };
+        // save a chat payload into Redis
+        const r = await kv.hset(`user:${unique_ip}chat:${id}`, payload);
+        console.log("HSET RESP", r);
+        const msgs = JSON.stringify(strippedPayload);
+        // save the messages itself
+        const l = await kv.lpush(`chats:${unique_ip}`, msgs);
+        console.log("LPUSH RESP", l);
+      },
     });
+    return streamToResponse(stream, response);
   }
 
   return response.status(200).json({ hello: "world" });
