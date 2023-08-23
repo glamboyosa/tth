@@ -90,7 +90,12 @@ export default function ChatPage({
       <CommandChat
         usersMessages={usersMsgsList}
         open={open}
-        openHandler={() => setOpen(!open)}
+        openHandler={async () => {
+          if (open === false) {
+            await mutationHandler();
+          }
+          setOpen(!open);
+        }}
       />
       <Toaster />
     </>
