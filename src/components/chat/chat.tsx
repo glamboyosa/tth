@@ -15,6 +15,10 @@ type ChatProps = {
    * user's unique IP
    */
   unique_ip: string;
+  /**
+   * function that updates users list once streaming is done
+   */
+  mutationHandler: () => Promise<void>;
 };
 
 const NMY = (
@@ -31,6 +35,7 @@ const NMY = (
 const Chat: React.FC<ChatProps> = ({
   messages: initialMessages,
   unique_ip,
+  mutationHandler,
 }) => {
   const { messages, handleSubmit, input, handleInputChange } = useChat({
     api: "/api/chat",
@@ -42,6 +47,9 @@ const Chat: React.FC<ChatProps> = ({
       initialMessages && initialMessages.length > 0
         ? initialMessages
         : undefined,
+    async onFinish() {
+      await mutationHandler();
+    },
   });
   console.log("openAI", messages);
   return (

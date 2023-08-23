@@ -6,7 +6,7 @@ import { MessageTypeFromKV, StrippedPayload } from "@/types";
 import { kv } from "@vercel/kv";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Message } from "ai";
 import { useMutation } from "@tanstack/react-query";
 import CommandChat from "@/components/chat/command-chat";
@@ -20,6 +20,7 @@ export default function ChatPage({
   const [usersMsgsList, setUsersMsgsList] = useState(usersMessagesList);
 
   const uniqueIp = query["unique_ip"];
+  const id = query.id;
   const { toast } = useToast();
   const fetchList = useMutation<{ result: string[] }>(
     () =>
@@ -50,9 +51,9 @@ export default function ChatPage({
     }
   );
   console.log(usersMsgsList, "users msg list");
-  const mutationHandler = async () => {
+  const mutationHandler = useCallback(async () => {
     await fetchList.mutateAsync();
-  };
+  }, []);
 
   console.log(uniqueIp);
   // key handler for when ctrl f is pressed (open <Command/>)
@@ -68,10 +69,17 @@ export default function ChatPage({
 
     // also if the page mounts for the first time e.g. after clicking
     // some history , dismiss
+
     setOpen(false);
-    mutationHandler();
+
     return () => document.removeEventListener("keydown", down);
   }, []);
+
+  useEffect(() => {
+    if (id) {
+      setOpen(false);
+    }
+  }, [id]);
 
   return (
     <>
@@ -82,15 +90,12 @@ export default function ChatPage({
       <Chat
         messages={messages as unknown as Message[]}
         unique_ip={uniqueIp as string}
+        mutationHandler={mutationHandler}
       />
       <CommandChat
         usersMessages={usersMsgsList}
         open={open}
-        openHandler={async () => {
-          console.log("YM");
-          await mutationHandler();
-          setOpen(!open);
-        }}
+        openHandler={() => setOpen(!open)}
       />
       <Toaster />
     </>
@@ -103,7 +108,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let path: string | null = "";
 
   console.log(query);
-  if (query.id) {
+  if (query.id && query.id.length > 0) {
     usersMessages = await kv.hget(`userchat${query.id}`, "messages");
     path = await kv.hget(`userchat${query.id}`, "path");
   }
