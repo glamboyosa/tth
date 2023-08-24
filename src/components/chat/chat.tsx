@@ -1,11 +1,11 @@
 import Image from "next/image";
 import ChatInput from "./chat-input";
-import { LightMessageType, StrippedPayload } from "@/types";
+import { LightMessageType } from "@/types";
 import { useChat } from "ai/react";
 import { Message } from "ai";
 import { MessageList } from "../message-list";
 import Spacer from "../ui/spacer";
-import { useEffect, useId, useState } from "react";
+import { useState } from "react";
 
 type ChatProps = {
   /**
@@ -46,22 +46,18 @@ const Chat: React.FC<ChatProps> = ({
     },
 
     initialMessages:
-      initialMessages && initialMessages.length > 0 ? initialMessages : [],
+      initialMessages && initialMessages.length > 0
+        ? initialMessages
+        : undefined,
     async onFinish() {
       await mutationHandler();
     },
   });
   console.log("openAI", messages);
-  useEffect(() => {
-    if (window.location.search.includes("&")) {
-      setIncludesId(true);
-    } else {
-      setIncludesId(false);
-    }
-  }, []);
+
   return (
     <div className="mt-32 overflow-scroll scroll-smooth">
-      {includesId && messages.length > 0 ? (
+      {messages.length > 0 ? (
         <MessageList messages={messages as unknown as LightMessageType[]} />
       ) : (
         NMY

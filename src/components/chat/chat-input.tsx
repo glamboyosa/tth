@@ -10,6 +10,7 @@ import {
 import { ChangeEvent, FormEvent } from "react";
 import { ChatRequestOptions } from "ai";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 type ChatInputProps = {
   /**
@@ -47,10 +48,9 @@ const ChatInput = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <PlusCircleIcon
-                onClick={() => router.push(basePath)}
-                width={30}
-              />
+              <Link href={basePath} target="_blank">
+                <PlusCircleIcon width={30} />
+              </Link>
             </TooltipTrigger>
             <TooltipContent className="bg-white shadow-sm text-inherit">
               <p>Start a new chat</p>
