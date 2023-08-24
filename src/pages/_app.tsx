@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function App({ Component, pageProps }: AppProps) {
