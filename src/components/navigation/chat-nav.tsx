@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
 const commandLabel = (
-  <p className="text-base whitespace-nowrap text-muted-foreground">
+  <p className="text-[10px] whitespace-nowrap text-muted-foreground md:text-base">
     Conversation History (
     <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5  text-[10px] font-medium text-muted-foreground opacity-100">
       <span className="text-sm">⌘</span>F
@@ -42,10 +42,10 @@ const ChatNav = ({ triggerHandler, uniqueIp }: ChatNavProps) => {
   return (
     <div
       className={cn(
-        "bg-white  text-black fixed top-[1vh] z-20 w-auto rounded-md p-2  shadow-xl xl:top-[5vh]"
+        "bg-white  text-black fixed top-[1vh] z-20  rounded-md p-2 md:w-auto   shadow-xl xl:top-[5vh]"
       )}
     >
-      <div className="cursor flex space-x-2 md:space-x-6">
+      <div className="cursor flex space-x-2  md:space-x-6">
         {tabs.map((tab) =>
           tab.link ? (
             <Link
