@@ -6,14 +6,15 @@ import Image from "next/image";
 import app from "../../public/screenshot-app.png";
 import { indie, ultra } from "@/lib/font";
 import Spacer from "@/components/ui/spacer";
-
+export const runtime = "edge";
 export default function HomePage({
   params,
   searchParams,
 }: {
-  params: { slug: string };
+  params: { [key: string]: string };
   searchParams?: { unique_ip: string };
 }) {
+  console.log(searchParams);
   return (
     <section className="flex bg-homeBg min-h-screen flex-col justify-center items-center">
       <HomeNav className="mt-10 mb-7">
@@ -49,7 +50,6 @@ export default function HomePage({
         alt="app img"
         placeholder="blur"
         className="text-center w-full p-2 rounded-md shadow-lg h-auto lg:w-3/4 lg:h-auto"
-       
       />
       <Spacer className="mb-1" />
     </section>

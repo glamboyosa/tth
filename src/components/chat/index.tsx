@@ -1,26 +1,27 @@
-import Chat from "@/components/chat/chat";
-import ChatNav from "@/components/navigation/chat-nav";
-import { Toaster } from "@/components/ui/toaster";
-import { convertFromJSON } from "@/lib/convertFromJson";
+"use client";
 import { MessageTypeFromKV, StrippedPayload } from "@/types";
-import { kv } from "@vercel/kv";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import { Message } from "ai";
+import { useSearchParams } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import CommandChat from "@/components/chat/command-chat";
-import { useToast } from "@/components/ui/use-toast";
-export default function ChatPage({
+import Chat from "@/components/chat/chat";
+import { Message } from "ai";
+import ChatNav from "@/components/navigation/chat-nav";
+import { convertFromJSON } from "@/lib/convertFromJson";
+export default function ChatUI({
   messages,
   usersMessagesList,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { query } = useRouter();
+}: {
+  messages: MessageTypeFromKV;
+  usersMessagesList: Array<StrippedPayload> | null;
+}) {
+  const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
   const [usersMsgsList, setUsersMsgsList] = useState(usersMessagesList);
 
-  const uniqueIp = query["unique_ip"];
-  const id = query.id;
+  const uniqueIp = searchParams?.get("unique_ip");
+  const id = searchParams?.get("id");
   const { toast } = useToast();
   const fetchList = useMutation<{ result: string[] }>(
     () =>
@@ -97,37 +98,6 @@ export default function ChatPage({
         open={open}
         openHandler={() => setOpen(!open)}
       />
-      <Toaster />
     </>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { query } = context;
-  let usersMessages: MessageTypeFromKV = [];
-  let path: string | null = "";
-
-  console.log(query);
-  if (query.id && query.id.length > 0) {
-    usersMessages = await kv.hget(`userchat${query.id}`, "messages");
-    path = await kv.hget(`userchat${query.id}`, "path");
-  }
-
-  console.log(usersMessages, "from user serverr");
-
-  const msgsList: Array<StrippedPayload> = await kv.lrange(
-    `chats:${query.unique_ip}`,
-    0,
-    -1
-  );
-  console.log("FROM SERVER", msgsList);
-  const usersMessagesList =
-    msgsList !== null && msgsList.length > 0 ? msgsList : null;
-  return {
-    props: {
-      messages: usersMessages,
-      path,
-      usersMessagesList,
-    },
-  };
 }

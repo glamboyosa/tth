@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ChangeEvent, FormEvent } from "react";
 import { ChatRequestOptions } from "ai";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 type ChatInputProps = {
@@ -37,8 +37,10 @@ const ChatInput = ({
   value,
   submitHandler,
 }: ChatInputProps) => {
-  const router = useRouter();
-  const basePath = router.asPath.split("&")[0];
+  const pathname = usePathname();
+  console.log(pathname);
+  const basePath = window.location.href.split("&")[0];
+  console.log(basePath);
   return (
     <form
       onSubmit={submitHandler}
@@ -48,7 +50,7 @@ const ChatInput = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={basePath} target="_blank">
+              <Link href={basePath as string} target="_blank">
                 <PlusCircleIcon width={30} />
               </Link>
             </TooltipTrigger>
