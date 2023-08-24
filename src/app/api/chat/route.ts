@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   const id = crypto.randomUUID();
 
   console.log(messages, "messages from client");
-  const title = messages[0].content.substring(0, 50);
+  const title = messages.at(-1)?.content.substring(0, 50);
   const path = `/chat?unique_ip=${unique_ip}&id=${id}`;
   console.log("THE PATH IS", path);
   const res = await openai.chat.completions.create({
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
         id: payload.id,
         unique_ip: payload.unique_ip,
         path: payload.path,
-        title: payload.title,
+        title: payload.title as string,
       };
       // save a chat payload into Redis
       const r = await kv.hset(`userchat${id}`, payload);

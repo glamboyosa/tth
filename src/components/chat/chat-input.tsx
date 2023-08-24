@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ChangeEvent, FormEvent } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { ChatRequestOptions } from "ai";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -37,10 +37,13 @@ const ChatInput = ({
   value,
   submitHandler,
 }: ChatInputProps) => {
-  const pathname = usePathname();
-  console.log(pathname);
-  const basePath = window.location.href.split("&")[0];
+  const [basePath, setBasePath] = useState("");
+
   console.log(basePath);
+
+  useEffect(() => {
+    setBasePath(window.location.href.split("&")[0]);
+  }, []);
   return (
     <form
       onSubmit={submitHandler}
