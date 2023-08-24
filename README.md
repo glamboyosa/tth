@@ -20,7 +20,7 @@ cp .env.local.example .env.local
 
 To use Vercel KV in our project follow the [official guide](https://vercel.com/docs/storage/vercel-kv/quickstart) and update the env file with the variables supplied by Vercel.
 
-## Install Dependencies
+## Install Project Dependencies
 
 Install dependencies via:
 
