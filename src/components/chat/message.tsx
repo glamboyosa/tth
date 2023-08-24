@@ -6,7 +6,7 @@ import {
   ComputerDesktopIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "../ui/use-toast";
 
 export type MessageProps = {
   /**
@@ -34,7 +34,7 @@ export const Message = ({ message }: MessageProps) => {
   return (
     <div className="flex items-start w-1/2  gap-2 p-2 text-black divide-y-2 divide-y-reverse divide-solid divide-gray-300 last-of-type:divide-y-0 last-of-type:divide-none md:w-full">
       {message.role === "user" ? (
-        <UserIcon  className="w-12 md:w-6" />
+        <UserIcon className="w-12 md:w-6" />
       ) : (
         <ComputerDesktopIcon className="w-12 md:w-6" />
       )}
@@ -46,7 +46,6 @@ export const Message = ({ message }: MessageProps) => {
       </div>
       <ClipboardDocumentIcon
         className="ml-auto cursor-pointer divide-none! w-12 md:w-7"
-      
         onClick={() => copyHandler(message.content)}
       />
     </div>

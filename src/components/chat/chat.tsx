@@ -3,9 +3,8 @@ import ChatInput from "./chat-input";
 import { LightMessageType } from "@/types";
 import { useChat } from "ai/react";
 import { Message } from "ai";
-import { MessageList } from "../message-list";
+import { MessageList } from "./message-list";
 import Spacer from "../ui/spacer";
-import { useState } from "react";
 
 type ChatProps = {
   /**
@@ -38,7 +37,6 @@ const Chat: React.FC<ChatProps> = ({
   unique_ip,
   mutationHandler,
 }) => {
-  const [includesId, setIncludesId] = useState(false);
   const { messages, handleSubmit, input, handleInputChange } = useChat({
     api: "/api/chat",
     body: {
