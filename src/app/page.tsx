@@ -18,9 +18,7 @@ export default function HomePage({
   return (
     <section className="flex bg-homeBg min-h-screen flex-col justify-center items-center">
       <HomeNav className="mt-10 mb-7">
-        <span className={cn("text-xl md:text-2xl", indie.className)}>
-          Trelent
-        </span>
+        <span className={cn("text-xl md:text-2xl", indie.className)}>Trel</span>
         <Button className="rounded-md p-4 text-white" asChild>
           <Link
             href={{
@@ -39,7 +37,7 @@ export default function HomePage({
         )}
       >
         Discover AI-Powered Dialogue
-        <span>With Trelent,</span>
+        <span>With Trel,</span>
       </h1>
       <p className="text-xl md:text-2xl mb-4 text-center  text-gray-900">
         Your Personalized, Intelligent AI Conversation Partner 👾

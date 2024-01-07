@@ -9,7 +9,7 @@ import QueryProvider from "./query-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Trelent 👾",
+  title: "Trel 👾",
 };
 
 export default function RootLayout({
